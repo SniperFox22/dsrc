@@ -1208,4 +1208,43 @@ public class space_transition extends script.base_script
         LOG("space", "sending player to " + locTest);
         setTransform_o2p(objPlayer, trTest);
     }
+// ======================================================================
+// Atmospheric Auto-Transition Extension
+// Added by SniperFox22 (ATMO branch enhancement)
+// ======================================================================
+
+/**
+ * Periodically checks if a ship in atmospheric flight has reached the altitude
+ * threshold for space transition. If so, automatically transfers the ship and
+ * pilot to the corresponding space scene above the same planet.
+ */
+public void checkAtmosphericTransition(CreatureObject player, SceneObject ship) {
+    try {
+        if (ship == null || player == null)
+            return;
+
+        // Only operate if this world supports atmospheric flight
+        if (!isAtmosphericFlightEnabled(ship))
+            return;
+
+        // Get the ship's current Y (vertical) position
+        float altitude = ship.getPosition().y;
+
+        // Debug feedback in the server log or system message
+        debugServerMessage(player, "Atmospheric altitude: " + altitude);
+
+        // Set the ceiling altitude where transition should occur
+        final float SPACE_TRANSITION_ALTITUDE = 10000.0f; // meters, adjust per planet
+
+        // If altitude exceeds the limit, transition to space
+        if (altitude >= SPACE_TRANSITION_ALTITUDE) {
+            debugServerMessage(player, "Atmospheric ceiling reached (" + altitude + "m) — transitioning to space...");
+            transitionToSpace(player, ship);
+        }
+
+    } catch (Exception e) {
+        debugServerMessage(player, "Error in checkAtmosphericTransition(): " + e.getMessage());
+    }
 }
+}
+
