@@ -2,6 +2,7 @@ package script.space.ship_control_device;
 
 import script.*;
 import script.library.*;
+import script.space.space_transition;
 
 public class ship_control_device extends script.base_script
 {
@@ -291,6 +292,8 @@ public class ship_control_device extends script.base_script
                 location loc = getLocation(player);
                 space_transition.unpackShipForPlayer(player, ship);
                 setLocation(ship, new location(loc.x, loc.y + 10, loc.z));
+
+                space_transition.checkAtmosphericTransition(player, ship);
             }
         }
         else if (item == menu_info_types.SERVER_MENU6)
@@ -584,3 +587,4 @@ public class ship_control_device extends script.base_script
         return true;
     }
 }
+
